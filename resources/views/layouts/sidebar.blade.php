@@ -3,15 +3,35 @@
         <div class="sidebar-content">
             <div class="user">
                 <div class="avatar-sm float-left mr-2">
-                    <img src="../assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle">
+                    <div class="avatar-img rounded-circle" id="avatarUsersSidebar">
+                        <img src="{{ asset('assets/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle">
+                    </div>
                 </div>
-
+                <div class="info">
+                    <a data-toggle="collapse" href="#collapseExample" aria-expanded="true">
+                        <span>
+                            <span>Administrator</span>
+                            <span class="user-level">Admin</span>
+                            <span class="caret"></span>
+                        </span>
+                    </a>
+                    <div class="clearfix"></div>
+                    <div class="collapse in" id="collapseExample">
+                        <ul class="nav">
+                            <li>
+                                <a href="#">
+                                    <span class="link-collapse">Profil Saya</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <ul class="nav nav-primary">
-                <li class="nav-item {{ request()->is('user*') ? 'active' : '' }}">
-                    <a href="{{ url('/user') }}">
+                <li class="nav-item {{ request()->is('/*') ? 'active' : '' }}">
+                    <a href="{{ url('/') }}">
                         <i class="fas fa-plus"></i>
-                        <p>User</p>
+                        <p>Dashboard</p>
                     </a>
                 </li>
             </ul>

@@ -25,10 +25,10 @@
             <div class="content">
                 @yield('content')
             </div>
-            @include('Layouts.footer')
+            @include('layouts.footer')
         </div>
     </div>
-    @include('Layouts.script')
+    @include('layouts.script')
     @yield('script')
 
 </body>
