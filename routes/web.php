@@ -13,6 +13,10 @@ Route::get('/product', function () {
     return view('admin.product');
 });
 
+Route::get('/',  function () {
+    return view('admin.dashboard');
+});
+
 
 // route  api  //
 Route::prefix('v1/product')->controller(ProductController::class)->group(function () {
