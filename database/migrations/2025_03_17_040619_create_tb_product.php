@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tb_product', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('price');
+            $table->integer('price');
             $table->timestamps();
         });
     }
