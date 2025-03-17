@@ -83,7 +83,7 @@ class ProductRepositories implements ProductInterfaces
             // Hapus data pengguna
             $data->delete();
 
-            return $this->success("Data pengguna berhasil dihapus.");
+            return $this->success("Data produk berhasil dihapus.");
         } catch (\Throwable $th) {
             return $this->error($th->getMessage(), 400, $th, class_basename($this), __FUNCTION__);
         }

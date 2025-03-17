@@ -25,7 +25,7 @@ class ProductController extends Controller
     {
         return $this->ProductRepo->getDataById($id);
     }
-    public function updateData(ProductRequest $request, $id)
+    public function updateDataById(ProductRequest $request, $id)
     {
         return $this->ProductRepo->updateDataById($request, $id);
     }
