@@ -16,7 +16,9 @@ Route::get('/product', function () {
 Route::get('/',  function () {
     return view('admin.dashboard');
 });
-
+Route::get('/cashier',  function () {
+    return view('admin.transactions');
+});
 
 // route  api  //
 Route::prefix('v1/product')->controller(ProductController::class)->group(function () {
