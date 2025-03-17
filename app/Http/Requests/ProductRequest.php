@@ -26,7 +26,7 @@ class ProductRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|max:50',
-            'price' => 'required',
+            'price' => 'required|numeric',
 
         ];
         return $rules;
@@ -39,6 +39,7 @@ class ProductRequest extends FormRequest
             'name.max' => 'nama kedai tidak boleh lebih dari 50 karakter',
 
             'price.required' => 'harga wajib diisi',
+            'price.numeric' => 'harga harus berupa bilangan'
 
         ];
     }
