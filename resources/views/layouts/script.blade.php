@@ -9,7 +9,6 @@
 		}
 	});
 </script>
-
 	<!--   Core JS Files   -->
     <script src="{{ asset('assets/js/core/jquery.3.2.1.min.js') }}"></script>
 	<script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
@@ -27,7 +26,6 @@
 
 	<!-- Chart JS -->
 	<script src="{{ asset('assets/js/plugin/chart.js/chart.min.js') }}"></script>
-
 	<!-- jQuery Sparkline -->
 	<script src="{{ asset('assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
 

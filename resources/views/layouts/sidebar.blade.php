@@ -34,9 +34,12 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-            </ul>
-
-            <ul class="nav nav-primary">
+                <li class="nav-item {{ request()->is('cashier*') ? 'active' : '' }}">
+                    <a href="{{ url('/cashier') }}">
+                        <i class="fas fa-plus"></i>
+                        <p>Kasir</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->is('product*') ? 'active' : '' }}">
                     <a href="{{ url('/product') }}">
                         <i class="fas fa-plus"></i>
@@ -44,8 +47,6 @@
                     </a>
                 </li>
             </ul>
-
-
         </div>
     </div>
 </div>

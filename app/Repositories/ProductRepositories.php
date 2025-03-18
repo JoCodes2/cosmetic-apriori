@@ -6,13 +6,14 @@ use App\Http\Requests\ProductRequest;
 use App\Interfaces\ProductInterfaces;
 use App\Models\ProductModel;
 use App\Traits\HttpResponseTrait;
+use App\Traits\HttpResponseTraits;
 use Illuminate\Support\Facades\Hash;
 
 
 
 class ProductRepositories implements ProductInterfaces
 {
-    use HttpResponseTrait;
+    use HttpResponseTraits;
     protected $ProductModel;
     public function __construct(ProductModel $ProductModel)
     {
