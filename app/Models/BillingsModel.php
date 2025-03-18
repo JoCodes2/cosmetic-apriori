@@ -16,8 +16,6 @@ class BillingsModel extends Model
         'id',
         'id_customer',
         'total_payment',
-        'payment_amount',
-        'return_amount',
         'payment_date',
         'code_transaction',
         'created_at',

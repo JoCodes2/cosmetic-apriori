@@ -10,20 +10,21 @@
 
 </head>
 <body class="bg-gray-100">
-{{-- navbar --}}
-@include('ui.navbar')
-<!-- Alert Container -->
-<div id="alert-container" class="fixed top-5 right-5 z-50"></div>
+    {{-- navbar --}}
+    @include('ui.navbar')
+    <!-- Alert Container -->
+    <div id="alert-container" class="fixed top-5 right-5 z-50"></div>
 
-<main class="container mx-auto px-4 py-8">
-@yield('content')
-</main>
-@include('ui.footer')
-<script src="{{ asset('assets/js/core/jquery.3.2.1.min.js') }}"></script>
+    <main class="container mx-auto px-4 py-8">
+        @yield('content')
+    </main>
 
-<!-- Toastr JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    @include('ui.footer')
 
-@yield('script')
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/js/core/jquery.3.2.1.min.js') }}"></script>
+    @yield('script')
 </body>
 </html>
