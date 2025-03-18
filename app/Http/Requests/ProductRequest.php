@@ -27,6 +27,7 @@ class ProductRequest extends FormRequest
         $rules = [
             'name' => 'required|max:50',
             'price' => 'required|numeric',
+            'image' => $this->is('v1/product/update/*') ? 'image|mimes:jpeg,png,jpg|max:2048' : 'required|image|mimes:jpeg,png,jpg|max:2048',
 
         ];
         return $rules;
@@ -39,7 +40,12 @@ class ProductRequest extends FormRequest
             'name.max' => 'nama kedai tidak boleh lebih dari 50 karakter',
 
             'price.required' => 'harga wajib diisi',
-            'price.numeric' => 'harga harus berupa bilangan'
+            'price.numeric' => 'harga harus berupa bilangan',
+
+            'image.required' => 'Gambar produk wajib diunggah.',
+            'image.image' => 'Gambar produk harus berupa file gambar.',
+            'image.mimes' => 'Gambar produk harus berformat jpeg, png, atau jpg.',
+            'image.max' => 'Ukuran gambar produk tidak boleh lebih dari 2MB.',
 
         ];
     }
