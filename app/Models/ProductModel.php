@@ -14,6 +14,7 @@ class ProductModel extends Model
         'id',
         'name',
         'price',
+        'image',
         'created_at',
         'updated_at',
     ];

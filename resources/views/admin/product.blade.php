@@ -27,6 +27,7 @@
                                         <th>No</th>
                                         <th>Name</th>
                                         <th>Price</th>
+                                        <th>image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -82,6 +83,12 @@
                                         <small id="price-error" class="text-danger"></small>
                                     </div>
 
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        <input type="file" class="form-control-file" name="image" id="image">
+                                        <small id="image-error" class="text-danger"></small>
+                                    </div>
+
                                 </div>
                             </div>
                         </form>
@@ -124,6 +131,9 @@
                             tableBody += "<td>" + item.name + "</td>";
                             tableBody += "<td>Rp " + new Intl.NumberFormat("id-ID").format(item
                                 .price) + "</td>";
+                            tableBody += "<td><img src='/uploads/img-product/" + item
+                                .image +
+                                "' widht='100px' height='100px' alt='product Image'></td>";
                             tableBody += "<td>";
                             tableBody +=
                                 "<button type='button' class='btn btn-outline-primary btn-sm edit-btn' data-id='" +
@@ -218,6 +228,15 @@
                         $('#id').val(response.data.id);
                         $('#name').val(response.data.name);
                         $('#price').val(response.data.price);
+
+                        // Display image preview
+                        if (response.data.image) {
+                            $('#imagePreview').html(
+                                `<img src="/uploads/img-product/${response.data.image}" widht="200px" height="200px" alt="product Image">`
+                            );
+                        } else {
+                            $('#imagePreview').html('<p>No image available</p>');
+                        }
 
                     },
                     error: function(xhr, status, error) {
