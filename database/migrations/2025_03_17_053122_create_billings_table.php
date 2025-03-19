@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('id_customer')->constrained('customers')->cascadeOnDelete();
             $table->integer('total_payment');
             $table->date('payment_date');
+            $table->enum('status_transaction', ['done', 'not_done',]);
             $table->string('code_transaction');
             $table->timestamps();
         });

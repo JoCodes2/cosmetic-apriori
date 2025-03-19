@@ -16,10 +16,14 @@ class OrderController extends Controller
     }
     public function getAllData()
     {
-        $data = $this->orderRepo->getAllData();
+        return $this->orderRepo->getAllData();
     }
     public function createData(OrderRequest $request)
     {
-        $data = $this->orderRepo->createData($request);
+        return $this->orderRepo->createData($request);
+    }
+    public function getDataById($id)
+    {
+        return $this->orderRepo->getDataById($id);
     }
 }

@@ -22,7 +22,15 @@ class OrderRepositories implements OrderInterfaces
         $this->billings = $billings;
         $this->customers = $customers;
     }
-    public function getAllData() {}
+    public function getAllData()
+    {
+        $data = $this->billings::with(['customer', 'billingItems'])->get();
+        if (!$data) {
+            return $this->dataNotFound();
+        } else {
+            return $this->success($data);
+        }
+    }
     public function createData(OrderRequest $request)
     {
         try {
@@ -39,46 +47,49 @@ class OrderRepositories implements OrderInterfaces
             $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
             $transactionCode = 'INV-' . now()->format('Ymd-His') . '-' . $newNumber;
 
-            // 3️⃣ Ambil data dari localStorage (simulasi dengan request)
-            $cartItems = json_decode($request->cart_items, true);
-
-            if (empty($cartItems)) {
-                return response()->json(['message' => 'Keranjang belanja kosong!'], 400);
+            // 3️⃣ Ambil data dari localStorage untuk menghitung total payment
+            $total_payment = 0;
+            foreach ($request->input('orders') as $order) {
+                $total_payment += $order['total_price'];
             }
-
-            // 4️⃣ Hitung total pembayaran
-            $totalPayment = array_sum(array_column($cartItems, 'total_price'));
 
             // 5️⃣ Simpan data billing
             $billing = new $this->billings;
             $billing->id_customer = $customer->id;
-            $billing->total_payment = $totalPayment;
+            $billing->total_payment = $total_payment;
+            $billing->status_transaction = "not_done";
             $billing->payment_date = now();
             $billing->code_transaction = $transactionCode;
             $billing->save();
 
             // 6️⃣ Simpan data item yang dibeli
-            foreach ($cartItems as $item) {
-                $billingItem = new $this->billingsItems;
-                $billingItem->id_billing = $billing->id;
-                $billingItem->id_product = $item['id_product'];
-                $billingItem->name_product = $item['name_product'];
-                $billingItem->price_product = $item['price_product'];
-                $billingItem->qty = $item['qty'];
-                $billingItem->total_price = $item['total_price'];
-                $billingItem->save();
+            $billingItem = new $this->billingsItems;
+            $billingItemCollection = [];
+            foreach ($request->input('orders') as $order) {
+                $order['id_billing'] = $billing->id;
+                $billingItemCollection[] = $billingItem->create($order);
             }
 
-            DB::commit();
-
-            return $this->success([
+            $data = [
                 "customer" => $customer,
                 "billing" => $billing,
-                "billingItems" => $billingItem,
-            ]);
+                "billingItems" => $billingItemCollection,
+            ];
+            DB::commit();
+
+            return $this->success($data);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response()->json(['message' => 'Terjadi kesalahan!', 'error' => $th->getMessage()], 400);
+            return $this->error($th->getMessage(), 400, $th, class_basename($this), __FUNCTION__);
+        }
+    }
+
+    public function getDataById($id){
+        $data = $this->billings::with(['customer', 'billingItems'])->where('id', $id)->first();
+        if (!$data) {
+            return $this->dataNotFound();
+        } else {
+            return $this->success($data);
         }
     }
 }

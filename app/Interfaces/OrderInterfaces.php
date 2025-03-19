@@ -8,4 +8,5 @@ interface OrderInterfaces
 {
     public function getAllData();
     public function createData(OrderRequest $request);
+    public function getDataById($id);
 }

@@ -25,7 +25,7 @@ class BillingsModel extends Model
     {
         return $this->belongsTo(CustomersModel::class, 'id_customer', 'id');
     }
-    public function billingsItems(): HasMany
+    public function billingItems(): HasMany
     {
         return $this->hasMany(BillingItemsModel::class, 'id_billing', 'id');
     }

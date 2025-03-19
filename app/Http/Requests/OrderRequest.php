@@ -25,7 +25,7 @@ class OrderRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'phone' => 'required|numeric|digits_between:10,15',
+            'phone' => 'required|digits_between:10,15',
             'address' => 'required|string|max:500',
         ];
     }
@@ -40,7 +40,6 @@ class OrderRequest extends FormRequest
             'name.string' => 'Nama harus berupa teks.',
             'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
             'phone.required' => 'Nomor HP wajib diisi.',
-            'phone.numeric' => 'Nomor HP harus berupa angka.',
             'phone.digits_between' => 'Nomor HP harus memiliki minimal 10 digit dan maksimal 15 digit.',
             'address.required' => 'Alamat tidak boleh kosong.',
             'address.string' => 'Alamat harus berupa teks.',

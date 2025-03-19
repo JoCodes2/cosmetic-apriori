@@ -29,6 +29,7 @@ Route::prefix('v1/product')->controller(ProductController::class)->group(functio
 Route::prefix('v1/order')->controller(OrderController::class)->group(function () {
     Route::get('/', 'getAllData');
     Route::post('/create', 'createData');
+    Route::get('/get/{id}', 'getDataById');
 });
 
 
