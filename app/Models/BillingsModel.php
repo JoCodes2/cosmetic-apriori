@@ -16,8 +16,6 @@ class BillingsModel extends Model
         'id',
         'id_customer',
         'total_payment',
-        'payment_amount',
-        'return_amount',
         'payment_date',
         'code_transaction',
         'created_at',
@@ -27,7 +25,7 @@ class BillingsModel extends Model
     {
         return $this->belongsTo(CustomersModel::class, 'id_customer', 'id');
     }
-    public function billingsItems(): HasMany
+    public function billingItems(): HasMany
     {
         return $this->hasMany(BillingItemsModel::class, 'id_billing', 'id');
     }
