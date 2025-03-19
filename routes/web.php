@@ -45,3 +45,6 @@ Route::get('/chart',  function () {
 Route::get('/product-web', function () {
     return view('web.product');
 });
+
+
+// Route
