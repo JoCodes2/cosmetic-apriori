@@ -11,4 +11,5 @@ interface  ProductInterfaces
     public function getDataById($id);
     public function updateDataById(ProductRequest $request, $id);
     public function deleteDataById($id);
+    
 }

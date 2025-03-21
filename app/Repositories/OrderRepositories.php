@@ -9,6 +9,7 @@ use App\Models\BillingsModel;
 use App\Models\CustomersModel;
 use App\Traits\HttpResponseTraits;
 use Illuminate\Support\Facades\DB;
+use Phpml\Association\Apriori;
 
 class OrderRepositories implements OrderInterfaces
 {
@@ -93,5 +94,51 @@ class OrderRepositories implements OrderInterfaces
         } else {
             return $this->success($data);
         }
+    }
+    public function getTopProducts()
+    {
+        $transactions = DB::table('billings_items')
+            ->select('id_billing', DB::raw('GROUP_CONCAT(id_product ORDER BY id_product ASC) as products'))
+            ->groupBy('id_billing')
+            ->get()
+            ->pluck('products')
+            ->map(fn($item) => explode(',', $item))
+            ->toArray();
+
+        $productStats = DB::table('billings_items')
+            ->select('id_product', DB::raw('COUNT(DISTINCT id_billing) as transaction_count'), DB::raw('SUM(qty) as total_sold'))
+            ->groupBy('id_product')
+            ->orderByDesc('transaction_count')
+            ->limit(4)
+            ->get();
+
+        $products = DB::table('tb_product')
+            ->whereIn('id', $productStats->pluck('id_product'))
+            ->get()
+            ->keyBy('id');
+        $topProducts = $productStats->map(function ($product) use ($products) {
+            $productDetail = $products[$product->id_product] ?? null;
+            return [
+                'id' => $product->id_product,
+                'name' => $productDetail->name ?? 'Unknown',
+                'price' => $productDetail->price ?? 0,
+                'image' => $productDetail->image ?? null,
+                'total_sold' => $product->total_sold,
+                'transaction_count' => $product->transaction_count,
+            ];
+        });
+
+        $support = 0.2;
+        $confidence = 0.5;
+        $apriori = new Apriori($support, $confidence);
+        $apriori->train($transactions, []);
+        $rules = $apriori->getRules();
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'Top 4 Products based on sales & transactions',
+            'top_products' => $topProducts,
+            'association_rules' => $rules
+        ]);
     }
 }

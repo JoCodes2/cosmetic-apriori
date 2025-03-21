@@ -5,25 +5,15 @@
 @section('content')
     <section class="bg-pink-400 text-white py-16">
         <div class="container mx-auto px-4 text-center">
-            <h1 class="text-3xl font-bold mb-4">Selamat Datang di OIShop MAXIE</h1>
+            <h1 class="text-3xl font-bold mb-4">Selamat Datang di toko MaxieSkincare</h1>
             <p class="mb-6">Temukan produk Skincare berkualitas dengan harga terbaik</p>
-            <a class="bg-white text-pink-600 px-6 py-2 rounded-full font-semibold" href="#">Belanja Sekarang</a>
+            <a class="bg-white text-pink-600 px-6 py-2 rounded-full font-semibold" href="{{ url ('/product-web') }}">Belanja Sekarang</a>
         </div>
     </section>
     <section class="container mx-auto px-4 py-8">
         <h2 class="text-xl font-bold mb-4">Produk Terlaris</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white shadow-2xl rounded-xl  overflow-hidden">
-                <img class="w-full h-48 object-cover" src="https://storage.googleapis.com/a1aa/image/4Kg1EZIxZRJL21ZdcO98AXyKV-T72cnWvOnpvbxYYRo.jpg" alt="Produk D">
-                <div class="p-4">
-                    <h2 class="text-lg font-semibold">Produk D</h2>
-                    <p class="text-gray-600">Rp 250.000</p>
-                    <button class="mt-4 w-full bg-pink-400 border border-gray-300 text-white py-2 rounded-lg flex items-center justify-center space-x-2">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Tambahkan ke Keranjang</span>
-                    </button>
-                </div>
-            </div>
+        <div class="top-product grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+
         </div>
     </section>
     <section class="container mx-auto px-4 py-8">
@@ -36,6 +26,42 @@
 @section('script')
 <script>
     $(document).ready(function() {
+        $.ajax({
+            url: 'v1/order/top-product',
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.code === 200) {
+                    let productsContainer = $('.top-product');
+                    productsContainer.empty();
+
+                    response.top_products.forEach(product => {
+                        let productCard = `
+                            <div class="bg-white shadow-2xl rounded-xl overflow-hidden">
+                                <img class="w-full h-48 object-cover" src="/uploads/img-product/${product.image}" alt="${product.name}">
+                                <div class="p-4">
+                                    <h2 class="text-lg font-semibold">${product.name}</h2>
+                                    <p class="text-gray-600">Rp ${product.price.toLocaleString()}</p>
+                                    <button class="add-to-cart mt-4 w-full bg-pink-400 border border-gray-300 text-white py-2 rounded-lg flex items-center justify-center space-x-2"
+                                        data-id="${product.id}"
+                                        data-name="${product.name}"
+                                        data-price="${product.price}">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <span>Tambahkan ke Keranjang</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        productsContainer.append(productCard);
+                    });
+                } else {
+                    console.error('Gagal mengambil data produk:', response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Terjadi kesalahan:', error);
+            }
+        });
         $.ajax({
             url: "v1/product",
             type: "GET",
