@@ -18,6 +18,10 @@ Route::get('/cashier',  function () {
     return view('admin.transactions');
 });
 
+Route::get('/billing',  function () {
+    return view('admin.billing');
+});
+
 // route  api  //
 Route::prefix('v1/product')->controller(ProductController::class)->group(function () {
     Route::get('/', 'getAllData');

@@ -46,6 +46,12 @@
                         <p>Product</p>
                     </a>
                 </li>
+                <li class="nav-item {{ request()->is('billing*') ? 'active' : '' }}">
+                    <a href="{{ url('/billing') }}">
+                        <i class="fas fa-note"></i>
+                        <p>Billing</p>
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
