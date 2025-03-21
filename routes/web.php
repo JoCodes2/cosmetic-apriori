@@ -34,6 +34,7 @@ Route::prefix('v1/order')->controller(OrderController::class)->group(function ()
     Route::get('/', 'getAllData');
     Route::post('/create', 'createData');
     Route::get('/get/{id}', 'getDataById');
+    Route::get('/top-product', 'getTopProducts');
 });
 
 

@@ -1,7 +1,7 @@
 <footer class="bg-pink-400 text-white py-8">
     <div class="container mx-auto px-4 flex justify-between">
         <div>
-            <h3 class="text-lg font-bold">OIShop</h3>
+            <h3 class="text-lg font-bold">MaxieSkincare</h3>
             <p>Toko online terpercaya untuk semua kebutuhan skincare anda</p>
         </div>
         <div>
