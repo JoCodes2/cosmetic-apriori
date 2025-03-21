@@ -18,6 +18,7 @@ class BillingsModel extends Model
         'total_payment',
         'payment_date',
         'code_transaction',
+        'status_transaction',
         'created_at',
         'updated_at'
     ];
