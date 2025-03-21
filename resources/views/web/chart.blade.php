@@ -3,9 +3,12 @@
     Keranjang Anda
 @endsection
 @section('content')
-    <a href="{{ url('/product-web') }}" class="text-gray-500 mb-4 inline-block">&lt; Kembali</a>
-    <h1 class="text-2xl font-bold mb-6">Keranjang Belanja</h1>
-
+    <div class="mb-4">
+        <a class="text-gray-500 flex items-center space-x-1" href="{{ url('/product-web') }}">
+            <i class="fas fa-arrow-left"></i>
+            <span>Produk</span>
+        </a>
+    </div>
     <div class="flex flex-col lg:flex-row lg:space-x-8">
         <!-- Tabel Produk -->
         <div class="w-full lg:w-2/3 mb-8 lg:mb-0">
@@ -25,71 +28,9 @@
             </table>
         </div>
 
-    <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
-        <div class="flex justify-between items-center mb-4">
-            <div>
-                <h1 class="text-2xl font-bold">Faktur</h1>
-                <p class="text-gray-500">INV-20250319-102832-00001</p>
-            </div>
-            <div class="text-right">
-                <span class="bg-yellow-200 text-yellow-800 text-sm font-semibold px-2 py-1 rounded">Tertunda</span>
-                <p class="text-gray-500">Tanggal Jatuh Tempo: <span class="font-semibold text-black">19 March 2025</span></p>
-            </div>
-        </div>
-        <div class="flex justify-between mb-6">
-            <div>
-                <h2 class="text-gray-500 text-sm font-semibold">TAGIHAN UNTUK</h2>
-                <p class="text-lg font-semibold">Keiko Adkins</p>
-                <p class="text-gray-500">Cumque est amet per</p>
-                <p class="text-gray-500">878787767887</p>
-            </div>
-            <div class="text-right">
-                <h2 class="text-gray-500 text-sm font-semibold">INFORMASI FAKTUR</h2>
-                <p class="text-gray-500">Tanggal Dibuat: <span class="font-semibold text-black">19 March 2025</span></p>
-                <p class="text-gray-500">ID Faktur: <span class="font-semibold text-black">9e7f72c3</span></p>
-            </div>
-        </div>
-        <div class="overflow-x-auto mb-6">
-            <table class="min-w-full bg-gray-50 border border-gray-200">
-                <thead>
-                    <tr>
-                        <th class="py-2 px-4 border-b">Item</th>
-                        <th class="py-2 px-4 border-b">Harga Satuan</th>
-                        <th class="py-2 px-4 border-b">Jumlah</th>
-                        <th class="py-2 px-4 border-b">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-2 px-4 border-b">Isabella Allison</td>
-                        <td class="py-2 px-4 border-b">Rp 957</td>
-                        <td class="py-2 px-4 border-b">2</td>
-                        <td class="py-2 px-4 border-b">Rp 1.914</td>
-                    </tr>
-                    <tr>
-                        <td class="py-2 px-4 border-b font-semibold" colspan="3">Total</td>
-                        <td class="py-2 px-4 border-b font-semibold">Rp 1.914</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="flex justify-between items-center mb-6">
-            <button class="bg-gray-200 text-black px-4 py-2 rounded flex items-center">
-                <i class="fas fa-download mr-2"></i> Unduh
-            </button>
-        </div>
-        <div class="bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded-lg">
-            <div class="flex items-center">
-                <i class="fas fa-check-circle mr-2"></i>
-                <div>
-                    <p class="font-semibold">Terima kasih atas pembelian Anda</p>
-                    <p>Jika Anda memiliki pertanyaan mengenai faktur ini, silakan hubungi layanan pelanggan kami.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+
         <!-- Form & Ringkasan Pesanan -->
-        <div class="w-full lg:w-1/3">
+        <div id="orderSummary" class="w-full lg:w-1/3">
             <!-- Form Pesanan -->
             <div class="bg-white rounded-lg shadow p-6">
                 <h2 class="text-xl font-bold mb-4">Informasi Pemesanan</h2>
@@ -128,6 +69,7 @@
                 <button id="order-btn" class="w-full bg-pink-400 text-white py-2 rounded hover:bg-pink-500 transition duration-300">Pesan Sekarang</button>
             </div>
         </div>
+        <div id="invoiceContainer" class="hidden"></div>
     </div>
 @endsection
 
@@ -291,12 +233,8 @@ $(document).ready(function () {
 
     validation();
 
-    $('#name, #phone, #address').on('input', function () {
-        $(this).valid();
-    });
-
     $("#order-btn").click(function () {
-        if (!$('#orderForm').valid()) {
+     if (!$('#orderForm').valid()) {
             return;
         }
 
@@ -351,44 +289,171 @@ $(document).ready(function () {
             data: JSON.stringify(formData),
             contentType: "application/json",
             success: function (response) {
+                console.log(response);
+
                 if (response.code === 200) {
                     localStorage.removeItem("cart");
-                    showAlert("Pesanan berhasil dibuat!", "success");
-                    setTimeout(() => location.reload(), 2000);
+                    showTailwindAlert("Pesanan berhasil dikirim! Memuat invoice...", "success");
+
+                    let billingId = response.data.id || response.data.billing.id;
+
+                    localStorage.setItem("lastBillingId", billingId);
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
                 } else {
-                    showAlert(response.message || "Terjadi kesalahan, coba lagi!", "error");
+                    showTailwindAlert(response.message || "Terjadi kesalahan, coba lagi!", "error");
                 }
             },
-            error: function (xhr) {
-                let errorMessage = "Gagal mengirim pesanan!";
-                if (xhr.status === 422) {
-                    let response = JSON.parse(xhr.responseText);
-                    let errors = response.errors;
-                    errorMessage = Object.values(errors).map(msg => `<li>${msg}</li>`).join("");
-                    showAlert(`<ul>${errorMessage}</ul>`, "error");
-                } else {
-                    showAlert(errorMessage, "error");
-                }
+            error: function () {
+                showTailwindAlert("Gagal mengirim pesanan!", "error");
             },
             complete: function () {
                 $("#order-btn").prop("disabled", false).removeClass("opacity-50 cursor-not-allowed");
             }
         });
     }
+    let lastBillingId = localStorage.getItem("lastBillingId");
 
-    function showAlert(message, type) {
+    if (lastBillingId) {
+        $("#orderSummary").hide();
+        fetchInvoice(lastBillingId);
+        localStorage.removeItem("lastBillingId");
+    }
+
+    function fetchInvoice(id) {
+        $.ajax({
+            url: `v1/order/get/${id}`,
+            method: "GET",
+            success: function (response) {
+                if (response.code === 200) {
+                    showInvoiceModal(response.data);
+                } else {
+                    showTailwindAlert("Gagal mengambil data invoice", "error");
+                }
+            },
+            error: function () {
+                showTailwindAlert("Terjadi kesalahan saat mengambil data invoice", "error");
+            }
+        });
+    }
+
+    function showInvoiceModal(data) {
+        function formatRupiah(angka) {
+            return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+        function status(status_transaction) {
+            if (status_transaction === "paid") {
+                return `<span class='bg-green-200 text-green-800 text-sm font-semibold px-2 py-1 rounded'>Lunas</span>`;
+            } else if (status_transaction === "unpaid") {
+                return `<span class='bg-yellow-200 text-yellow-800 text-sm font-semibold px-2 py-1 rounded'>Belum Lunas</span>`;
+            } else {
+                return `<span class='bg-red-200 text-red-800 text-sm font-semibold px-2 py-1 rounded'>Dibatalkan</span>`;
+            }
+        }
+
+        let invoiceHtml = `
+            <div id='fakturInvoice' class='rounded-lg shadow-lg p-8 max-w-2xl w-full bg-white border bg-white'>
+                <div class='flex justify-between mb-6'>
+                    <div>
+                        <h2 class='text-gray-500 text-sm font-semibold'>TAGIHAN UNTUK</h2>
+                        <p class='text-gray-500'><span class='font-semibold text-black'>${data.customer.name}</span></p>
+                        <p class='text-gray-500'><span class='font-semibold text-black'>${data.customer.phone}</span></p>
+                        <span class='text-gray-500 text-sm font-semibold rounded'>${data.customer.address}</span>
+                    </div>
+                    <div class='text-right'>
+                        <h2 class='text-gray-500 text-sm font-semibold'>INFORMASI FAKTUR</h2>
+                        <p class='text-gray-500'><span class='font-semibold text-black'>${data.payment_date}</span></p>
+                        <p class='text-gray-500'><span class='font-semibold text-black'>${data.code_transaction}</span></p>
+                        ${status(data.status_transaction)}
+                    </div>
+                </div>
+                <div class='mb-6'>
+                    <table class='min-w-full bg-gray-50 border border-gray-200'>
+                        <thead>
+                            <tr>
+                                <th class='py-2 px-4 border-b'>Item</th>
+                                <th class='py-2 px-4 border-b'>Harga Satuan</th>
+                                <th class='py-2 px-4 border-b'>Jumlah</th>
+                                <th class='py-2 px-4 border-b'>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.billing_items.map(item => `
+                                <tr>
+                                    <td class='py-2 px-4 border-b'>${item.name_product}</td>
+                                    <td class='py-2 px-4 border-b'>Rp ${formatRupiah(item.price_product)}</td>
+                                    <td class='py-2 px-4 border-b'>${item.qty}</td>
+                                    <td class='py-2 px-4 border-b'>Rp ${formatRupiah(item.total_price)}</td>
+                                </tr>
+                            `).join('')}
+                            <tr>
+                                <td class='py-2 px-4 border-b font-semibold' colspan='3'>Total</td>
+                                <td class='py-2 px-4 border-b font-semibold'>Rp ${formatRupiah(data.total_payment)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="flex justify-between items-center mb-6">
+                    <button id="downloadInvoice" class="bg-gray-200 text-black px-4 py-2 rounded flex items-center">
+                        <i class="fas fa-download mr-2"></i> Unduh
+                    </button>
+                </div>
+                <div class="bg-pink-50 border border-pink-200 text-pink-700 p-4 rounded-lg">
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <div>
+                            <p class="font-semibold">Terima kasih atas pembelian Anda</p>
+                            <p>Jika Anda memiliki pertanyaan mengenai faktur ini, silakan hubungi layanan pelanggan kami.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+
+        $("#invoiceContainer").html(invoiceHtml).removeClass("hidden");
+
+        // Event Listener untuk tombol download
+        $("#downloadInvoice").on("click", function () {
+            let element = document.getElementById('fakturInvoice');
+            let customerName = data.customer.name.replace(/\s+/g, '_');
+            let transactionCode = data.code_transaction;
+            let fileName = `${customerName}-inv-${transactionCode}.pdf`;
+
+            let options = {
+                margin: 10,
+                filename: fileName,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+               console.log("Nama File:", fileName);
+               console.log("Element:", element);
+            html2pdf().from(element).set(options).save().then(() => {
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            });
+        });
+
+    }
+
+   function showTailwindAlert(message, type) {
+        let iconClass = type === "success" ? "fas fa-check-circle text-white" : "fas fa-times-circle text-white";
         let bgColor = type === "success" ? "bg-green-500" : "bg-red-500";
-        let textColor = "text-white";
 
-        let alertHtml = `
-            <div class="mt-2 p-2 rounded-lg ${bgColor} ${textColor} text-sm text-center">
-                ${message}
+        let alertDiv = $(`
+            <div class="fixed top-5 right-5 px-4 py-3 rounded shadow-md text-white text-sm ${bgColor} flex items-center space-x-2">
+                <i class="${iconClass}"></i>
+                <span>${message}</span>
             </div>
-        `;
+        `);
 
-        $("#alert-container").html(alertHtml);
+        $("body").append(alertDiv);
 
-        setTimeout(() => $("#alert-container").html(""), 5000);
+        setTimeout(() => {
+            alertDiv.fadeOut(500, () => alertDiv.remove());
+        }, 3000);
     }
 
 
