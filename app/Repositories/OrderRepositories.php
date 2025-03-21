@@ -57,7 +57,7 @@ class OrderRepositories implements OrderInterfaces
             $billing = new $this->billings;
             $billing->id_customer = $customer->id;
             $billing->total_payment = $total_payment;
-            $billing->status_transaction = "not_done";
+            $billing->status_transaction = "unpaid";
             $billing->payment_date = now();
             $billing->code_transaction = $transactionCode;
             $billing->save();
@@ -71,6 +71,7 @@ class OrderRepositories implements OrderInterfaces
             }
 
             $data = [
+                "id" => $billing->id,
                 "customer" => $customer,
                 "billing" => $billing,
                 "billingItems" => $billingItemCollection,
@@ -84,7 +85,8 @@ class OrderRepositories implements OrderInterfaces
         }
     }
 
-    public function getDataById($id){
+    public function getDataById($id)
+    {
         $data = $this->billings::with(['customer', 'billingItems'])->where('id', $id)->first();
         if (!$data) {
             return $this->dataNotFound();

@@ -33,7 +33,7 @@
                     $.each(products, function(index, product) {
                         let productCard = `
                             <div class="bg-white shadow rounded-lg overflow-hidden p-4">
-                                <img class="w-full h-48 object-cover" src="https://placehold.co/200" alt="${product.name}">
+                                <img class="w-full h-48 object-cover" src="/uploads/img-product/${product.image}" alt="${product.name}">
                                 <div class="p-4">
                                     <h2 class="text-lg font-semibold">${product.name}</h2>
                                     <p class="text-gray-600">Rp ${product.price.toLocaleString()}</p>

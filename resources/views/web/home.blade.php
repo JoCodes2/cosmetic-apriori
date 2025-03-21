@@ -3,9 +3,9 @@
     Home
 @endsection
 @section('content')
-        <section class="bg-pink-400 text-white py-16">
+    <section class="bg-pink-400 text-white py-16">
         <div class="container mx-auto px-4 text-center">
-            <h1 class="text-3xl font-bold mb-4">Selamat Datang di OIShop Kadri</h1>
+            <h1 class="text-3xl font-bold mb-4">Selamat Datang di OIShop MAXIE</h1>
             <p class="mb-6">Temukan produk Skincare berkualitas dengan harga terbaik</p>
             <a class="bg-white text-pink-600 px-6 py-2 rounded-full font-semibold" href="#">Belanja Sekarang</a>
         </div>
@@ -49,7 +49,7 @@
                     $.each(products, function(index, product) {
                         let productCard = `
                             <div class="bg-white shadow rounded-lg overflow-hidden p-4">
-                                <img class="w-full h-48 object-cover" src="https://placehold.co/200" alt="${product.name}">
+                                <img class="w-full h-48 object-cover" src="/uploads/img-product/${product.image}" alt="${product.name}">
                                 <div class="p-4">
                                     <h2 class="text-lg font-semibold">${product.name}</h2>
                                     <p class="text-gray-600">Rp ${product.price.toLocaleString()}</p>
