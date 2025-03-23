@@ -34,16 +34,17 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item {{ request()->is('cashier*') ? 'active' : '' }}">
-                    <a href="{{ url('/cashier') }}">
-                        <i class="fas fa-plus"></i>
-                        <p>Kasir</p>
-                    </a>
-                </li>
+
                 <li class="nav-item {{ request()->is('product*') ? 'active' : '' }}">
                     <a href="{{ url('/product') }}">
                         <i class="fas fa-plus"></i>
-                        <p>Product</p>
+                        <p>Produk</p>
+                    </a>
+                </li>
+                <li class="nav-item {{ request()->is('billing*') ? 'active' : '' }}">
+                    <a href="{{ url('/billing') }}">
+                        <i class="fas fa-note"></i>
+                        <p>pesanan</p>
                     </a>
                 </li>
             </ul>

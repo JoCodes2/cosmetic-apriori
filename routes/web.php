@@ -18,6 +18,12 @@ Route::get('/cashier',  function () {
     return view('admin.transactions');
 });
 
+Route::get('/billing',  function () {
+    return view('admin.billing');
+});
+
+Route::get('v1/order/{id}/invoice', [OrderController::class, 'showInvoice']);
+
 // route  api  //
 Route::prefix('v1/product')->controller(ProductController::class)->group(function () {
     Route::get('/', 'getAllData');
@@ -31,6 +37,8 @@ Route::prefix('v1/order')->controller(OrderController::class)->group(function ()
     Route::post('/create', 'createData');
     Route::get('/get/{id}', 'getDataById');
     Route::get('/top-product', 'getTopProducts');
+
+    Route::put('/{id}/status', 'updateStatus');
 });
 
 

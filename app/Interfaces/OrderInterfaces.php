@@ -10,4 +10,6 @@ interface OrderInterfaces
     public function createData(OrderRequest $request);
     public function getDataById($id);
     public function getTopProducts();
+
+    public function updateStatus($id, $status);
 }
