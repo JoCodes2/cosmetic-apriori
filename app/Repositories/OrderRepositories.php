@@ -10,6 +10,10 @@ use App\Models\CustomersModel;
 use App\Traits\HttpResponseTraits;
 use Illuminate\Support\Facades\DB;
 use Phpml\Association\Apriori;
+use App\Models\Order;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
+
+
 
 class OrderRepositories implements OrderInterfaces
 {
@@ -140,5 +144,21 @@ class OrderRepositories implements OrderInterfaces
             'top_products' => $topProducts,
             'association_rules' => $rules
         ]);
+    }
+
+
+
+    public function updateStatus($id, $status)
+    {
+        $order = $this->billings->find($id); // Menggunakan BillingsModel
+
+        if (!$order) {
+            return ['success' => false, 'message' => 'Order tidak ditemukan'];
+        }
+
+        $order->status_transaction = $status;
+        $order->save();
+
+        return ['success' => true, 'message' => 'Status berhasil diperbarui', 'order' => $order];
     }
 }

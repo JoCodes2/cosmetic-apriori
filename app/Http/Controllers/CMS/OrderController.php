@@ -35,4 +35,11 @@ class OrderController extends Controller
     {
         return $this->orderRepo->getTopProducts();
     }
+
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        return $this->orderRepo->updateStatus($id, $request->status);
+    }
 }
