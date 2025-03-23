@@ -8,6 +8,7 @@ use App\Models\BillingItemsModel;
 use App\Models\BillingsModel;
 use App\Models\CustomersModel;
 use App\Traits\HttpResponseTraits;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Phpml\Association\Apriori;
 
@@ -109,7 +110,6 @@ class OrderRepositories implements OrderInterfaces
             ->select('id_product', DB::raw('COUNT(DISTINCT id_billing) as transaction_count'), DB::raw('SUM(qty) as total_sold'))
             ->groupBy('id_product')
             ->orderByDesc('transaction_count')
-            ->limit(4)
             ->get();
 
         $products = DB::table('tb_product')
@@ -139,6 +139,40 @@ class OrderRepositories implements OrderInterfaces
             'message' => 'Top 4 Products based on sales & transactions',
             'top_products' => $topProducts,
             'association_rules' => $rules
+        ]);
+    }
+    public function getRecommendedProducts(Request $request)
+    {
+        $productIds = $request->input('product_ids'); // Produk yang ada di keranjang
+        $topProductsResponse = $this->getTopProducts();
+        $topProducts = collect($topProductsResponse->getData()->top_products);
+
+        // Buat pasangan produk
+        $productPairs = [];
+        for ($i = 0; $i < count($topProducts); $i += 2) {
+            if (isset($topProducts[$i + 1])) {
+                $productPairs[$topProducts[$i]->id] = $topProducts[$i + 1];
+                $productPairs[$topProducts[$i + 1]->id] = $topProducts[$i];
+            }
+        }
+
+        $recommendedProducts = [];
+        foreach ($productIds as $productId) {
+            if (isset($productPairs[$productId])) {
+                $pairedProduct = $productPairs[$productId];
+
+                // Jika produk pasangan belum ada di keranjang & belum ada di rekomendasi
+                if (!in_array($pairedProduct->id, $productIds) && !collect($recommendedProducts)->contains('id', $pairedProduct->id)) {
+                    $recommendedProducts[] = $pairedProduct;
+                }
+            }
+        }
+
+        // **Pastikan rekomendasi tidak hilang walaupun produk sudah dipilih**
+        return response()->json([
+            'code' => 200,
+            'message' => count($recommendedProducts) > 0 ? "Recommended products found." : "No recommendation available.",
+            'recommended_products' => array_values($recommendedProducts) // Reset index array
         ]);
     }
 }

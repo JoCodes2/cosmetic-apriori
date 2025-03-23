@@ -3,6 +3,7 @@
 namespace App\Interfaces;
 
 use App\Http\Requests\OrderRequest;
+use Illuminate\Http\Request;
 
 interface OrderInterfaces
 {
@@ -10,4 +11,5 @@ interface OrderInterfaces
     public function createData(OrderRequest $request);
     public function getDataById($id);
     public function getTopProducts();
+    public function getRecommendedProducts(Request $request);
 }
