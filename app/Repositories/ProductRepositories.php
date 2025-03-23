@@ -6,14 +6,13 @@ use App\Http\Requests\ProductRequest;
 use App\Interfaces\ProductInterfaces;
 use App\Models\ProductModel;
 use App\Traits\HttpResponseTraits;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
 
 use Illuminate\Support\Facades\Hash;
-
-
 
 class ProductRepositories implements ProductInterfaces
 {
@@ -33,6 +32,29 @@ class ProductRepositories implements ProductInterfaces
             return $this->success($data);
         }
     }
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        if (strlen($keyword) < 3) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Minimal input pencarian adalah 3 karakter.'
+            ], 400);
+        }
+
+        $data = $this->ProductModel::where('name', 'like', "%{$keyword}%")
+            ->orWhere('price', 'like', "%{$keyword}%")
+            ->limit(5)
+            ->get();
+
+        if (!$data) {
+            return $this->dataNotFound();
+        }
+
+        return $this->success($data);
+    }
+
     public function createData(ProductRequest $request)
     {
         try {

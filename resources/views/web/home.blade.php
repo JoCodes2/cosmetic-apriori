@@ -35,7 +35,10 @@
                     let productsContainer = $('.top-product');
                     productsContainer.empty();
 
-                    response.top_products.forEach(product => {
+                    // Ambil hanya 4 produk teratas
+                    let topProducts = response.top_products.slice(0, 4);
+
+                    topProducts.forEach(product => {
                         let productCard = `
                             <div class="bg-white shadow-2xl rounded-xl overflow-hidden">
                                 <img class="w-full h-48 object-cover" src="/uploads/img-product/${product.image}" alt="${product.name}">
@@ -62,6 +65,7 @@
                 console.error('Terjadi kesalahan:', error);
             }
         });
+
         $.ajax({
             url: "v1/product",
             type: "GET",

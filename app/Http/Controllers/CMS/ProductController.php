@@ -5,6 +5,7 @@ namespace App\Http\Controllers\CMS;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Repositories\ProductRepositories;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -32,5 +33,9 @@ class ProductController extends Controller
     public function deleteDataById($id)
     {
         return $this->ProductRepo->deleteDataById($id);
+    }
+    public function search(Request $request)
+    {
+        return $this->ProductRepo->search($request);
     }
 }

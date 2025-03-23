@@ -35,8 +35,11 @@ class OrderController extends Controller
     {
         return $this->orderRepo->getTopProducts();
     }
+    public function getRecommendedProducts(Request $request)
+    {
+        return $this->orderRepo->getRecommendedProducts($request);
 
-
+    }
 
     public function updateStatus(Request $request, $id)
     {

@@ -3,6 +3,7 @@
 namespace App\Interfaces;
 
 use App\Http\Requests\ProductRequest;
+use Illuminate\Http\Request;
 
 interface  ProductInterfaces
 {
@@ -11,5 +12,5 @@ interface  ProductInterfaces
     public function getDataById($id);
     public function updateDataById(ProductRequest $request, $id);
     public function deleteDataById($id);
-    
+    public function search(Request $request);
 }

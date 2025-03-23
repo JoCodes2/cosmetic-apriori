@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    <h1 class="text-2xl font-bold mb-6">Semua Produk</h1>
+    <h1 class="text-2xl font-bold mb-6">Hasil Pencarian</h1>
     <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 
     </div>
@@ -20,44 +20,59 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        $.ajax({
-            url: "v1/product",
-            type: "GET",
-            dataType: "json",
-            success: function(response) {
-                if (response.code === 200) {
-                    let products = response.data;
-                    let productContainer = $("#product-list");
-                    productContainer.empty();
+        function getProductIdFromURL() {
+            let params = new URLSearchParams(window.location.search);
+            return params.get("product_id");
+        }
 
-                    $.each(products, function(index, product) {
+        function fetchProductDetail(productId) {
+            if (!productId) {
+                $("#product-list").html("<p class='text-red-500'>Produk tidak ditemukan.</p>");
+                return;
+            }
+
+            $.ajax({
+                url: `/v1/product/get/${productId}`,
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response); // Debug response
+
+                    if (response.code === 200 && response.data) {
+                        let product = response.data;
+                        let price = product.price ? product.price.toLocaleString() : "Harga tidak tersedia";
+
                         let productCard = `
                             <div class="bg-white shadow rounded-lg overflow-hidden p-4">
                                 <img class="w-full h-48 object-cover" src="/uploads/img-product/${product.image}" alt="${product.name}">
                                 <div class="p-4">
                                     <h2 class="text-lg font-semibold">${product.name}</h2>
-                                    <p class="text-gray-600">Rp ${product.price.toLocaleString()}</p>
+                                    <p class="text-gray-600">Rp ${price}</p>
                                     <button class="add-to-cart mt-4 w-full bg-pink-400 border border-gray-300 text-white py-2 rounded-lg flex items-center justify-center space-x-2"
                                         data-id="${product.id}"
                                         data-name="${product.name}"
-                                        data-price="${product.price}">
+                                        data-price="${product.price || 0}">
                                         <i class="fas fa-shopping-cart"></i>
                                         <span>Tambahkan ke Keranjang</span>
                                     </button>
                                 </div>
                             </div>
                         `;
-                        productContainer.append(productCard);
-                    });
-                } else {
-                    console.error("Gagal mengambil data produk");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Terjadi kesalahan:", error);
-            }
-        });
 
+                        $("#product-list").html(productCard);
+                    } else {
+                        $("#product-list").html("<p class='text-gray-500'>Produk tidak ditemukan.</p>");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Terjadi kesalahan:", error);
+                    $("#product-list").html("<p class='text-red-500'>Gagal mengambil data produk.</p>");
+                }
+            });
+        }
+
+        let productId = getProductIdFromURL();
+        fetchProductDetail(productId);
         function updateCartCountNavbar() {
             let cart = JSON.parse(localStorage.getItem("cart")) || [];
             let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
