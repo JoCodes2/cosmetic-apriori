@@ -12,4 +12,5 @@ interface OrderInterfaces
     public function getDataById($id);
     public function getTopProducts();
     public function getRecommendedProducts(Request $request);
+    public function updateStatus($id, $status);
 }

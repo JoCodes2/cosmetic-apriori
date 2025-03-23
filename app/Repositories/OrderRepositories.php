@@ -11,6 +11,10 @@ use App\Traits\HttpResponseTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Phpml\Association\Apriori;
+use App\Models\Order;
+use App\Repositories\Interfaces\OrderRepositoryInterface;
+
+
 
 class OrderRepositories implements OrderInterfaces
 {
@@ -174,5 +178,19 @@ class OrderRepositories implements OrderInterfaces
             'message' => count($recommendedProducts) > 0 ? "Recommended products found." : "No recommendation available.",
             'recommended_products' => array_values($recommendedProducts) // Reset index array
         ]);
+    }
+
+    public function updateStatus($id, $status)
+    {
+        $order = $this->billings->find($id); // Menggunakan BillingsModel
+
+        if (!$order) {
+            return ['success' => false, 'message' => 'Order tidak ditemukan'];
+        }
+
+        $order->status_transaction = $status;
+        $order->save();
+
+        return ['success' => true, 'message' => 'Status berhasil diperbarui', 'order' => $order];
     }
 }
