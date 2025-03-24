@@ -4,13 +4,13 @@
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h4 class="page-title"><i class="fas fa-shopping-cart pr-2"></i> Data Orders</h4>
+            <h4 class="page-title"><i class="fas fa-shopping-cart pr-2"></i> Data Pesanan</h4>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">List Orders</h4>
+                        <h4 class="card-title">Pesanan</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -18,14 +18,14 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Code Transaction</th>
-                                        <th>Customer Name</th>
-                                        <th>Phone</th>
-                                        <th>Total Payment</th>
-                                        <th>Payment Date</th>
+                                        <th>Kode Transaksi</th>
+                                        <th>Nama Pelanggan</th>
+                                        <th>Nomor Telepon</th>
+                                        <th>Total Pembayaran</th>
+                                        <th>Tanggal</th>
                                         <th>Status</th>
-                                        <th>Items</th>
-                                        <th>Action</th>
+                                        <th>Barang</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="orderTable">
@@ -43,7 +43,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="invoiceModalLabel">Invoice</h5>
+                        <h5 class="modal-title" id="invoiceModalLabel">Bukti Pembayaran</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -65,7 +65,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
+                                        <th>Barang</th>
                                         <th>Harga Satuan</th>
                                         <th>Jumlah</th>
                                         <th>Total</th>

@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Phpml\Association\Apriori;
 use App\Models\Order;
+use Carbon\Carbon;
+
 use App\Repositories\Interfaces\OrderRepositoryInterface;
 
 
@@ -192,5 +194,20 @@ class OrderRepositories implements OrderInterfaces
         $order->save();
 
         return ['success' => true, 'message' => 'Status berhasil diperbarui', 'order' => $order];
+    }
+
+    public function getTodayOrders()
+    {
+        $today = now()->toDateString(); // Mendapatkan tanggal hari ini (YYYY-MM-DD)
+
+        $data = $this->billings::with(['customer', 'billingItems'])
+            ->whereDate('created_at', $today) // Filter hanya untuk pesanan hari ini
+            ->get();
+
+        if ($data->isEmpty()) {
+            return $this->dataNotFound();
+        } else {
+            return $this->success($data);
+        }
     }
 }

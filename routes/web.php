@@ -23,6 +23,10 @@ Route::get('/billing',  function () {
     return view('admin.billing');
 });
 
+Route::get('/home',  function () {
+    return view('admin.dashboard');
+});
+
 Route::get('v1/order/{id}/invoice', [OrderController::class, 'showInvoice']);
 
 // route  api  //
@@ -41,6 +45,7 @@ Route::prefix('v1/order')->controller(OrderController::class)->group(function ()
     Route::get('/get/{id}', 'getDataById');
     Route::get('/top-product', 'getTopProducts');
     Route::put('/{id}/status', 'updateStatus');
+    Route::get('/today', 'getTodayOrders');
 });
 
 // ui web
