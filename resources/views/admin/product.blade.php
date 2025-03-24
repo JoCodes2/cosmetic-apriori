@@ -5,7 +5,7 @@
 @section('content')
     <div class="page-inner">
         <div class="page-header ">
-            <h4 class="page-title"><i class="fas fa-users pr-2"></i>Data Product</h4>
+            <h4 class="page-title"><i class="fas fa-users pr-2"></i>Data Produk</h4>
         </div>
 
         <div class="row">
@@ -25,10 +25,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>image</th>
-                                        <th>Action</th>
+                                        <th>Nama</th>
+                                        <th>Harga</th>
+                                        <th>Gambar Produk</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tBody">
@@ -66,9 +66,9 @@
                                 <div class="col-md-12">
                                     <!-- Name Input -->
                                     <div class="form-group">
-                                        <label for="name">Nama Product</label>
+                                        <label for="name">Nama Produk</label>
                                         <input type="text" class="form-control form-control-lg" name="name"
-                                            id="name" placeholder="Masukkan Nama Kedai">
+                                            id="name" placeholder="Masukkan Nama Produk">
                                         <small id="name-error" class="text-danger"></small>
                                     </div>
 
