@@ -1,51 +1,62 @@
 <?php
 
 use App\Http\Controllers\CMS\OrderController;
+use App\Http\Controllers\Auth\AuthController;
+
 use App\Http\Controllers\CMS\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+Route::post('v1/login', [AuthController::class, 'login']);
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login')->middleware('guest');
 
-Route::get('/user', function () {
-    return view('admin.user');
-});
+Route::middleware(['auth', 'web'])->group(function () {
 
-Route::get('/product', function () {
-    return view('admin.product');
-});
+    Route::get('/user', function () {
+        return view('admin.user');
+    });
 
-Route::get('/cashier',  function () {
-    return view('admin.transactions');
-});
+    Route::get('/product', function () {
+        return view('admin.product');
+    });
 
-Route::get('/billing',  function () {
-    return view('admin.billing');
-});
+    Route::get('/billing',  function () {
+        return view('admin.billing');
+    });
 
-Route::get('/home',  function () {
-    return view('admin.dashboard');
-});
+    Route::get('/home',  function () {
+        return view('admin.dashboard');
+    });
 
-Route::get('v1/order/{id}/invoice', [OrderController::class, 'showInvoice']);
+    Route::get('v1/order/{id}/invoice', [OrderController::class, 'showInvoice']);
 
-// route  api  //
-Route::prefix('v1/product')->controller(ProductController::class)->group(function () {
-    Route::get('/', 'getAllData');
-    Route::post('/create', 'createData');
-    Route::get('/search', 'search');
-    Route::get('/get/{id}', 'getDataById');
-    Route::post('/update/{id}', 'updateDataById');
-    Route::delete('/delete/{id}', 'deleteDataById');
-});
-Route::prefix('v1/order')->controller(OrderController::class)->group(function () {
-    Route::get('/', 'getAllData');
-    Route::post('/recommendations', 'getRecommendedProducts');
-    Route::post('/create', 'createData');
-    Route::get('/get/{id}', 'getDataById');
-    Route::get('/top-product', 'getTopProducts');
-    Route::put('/{id}/status', 'updateStatus');
-    Route::get('/today', 'getTodayOrders');
+
+    Route::prefix('v1')->group(function () {
+
+        // route  api  //
+        Route::prefix('product')->controller(ProductController::class)->group(function () {
+            Route::get('/', 'getAllData');
+            Route::post('/create', 'createData');
+            Route::get('/search', 'search');
+            Route::get('/get/{id}', 'getDataById');
+            Route::post('/update/{id}', 'updateDataById');
+            Route::delete('/delete/{id}', 'deleteDataById');
+        });
+        Route::prefix('order')->controller(OrderController::class)->group(function () {
+            Route::get('/', 'getAllData');
+            Route::post('/recommendations', 'getRecommendedProducts');
+            Route::post('/create', 'createData');
+            Route::get('/get/{id}', 'getDataById');
+            Route::get('/top-product', 'getTopProducts');
+            Route::put('/{id}/status', 'updateStatus');
+            Route::get('/today', 'getTodayOrders');
+        });
+    });
+
+    Route::post('v1/logout', [AuthController::class, 'logout']);
 });
 
 // ui web
@@ -64,6 +75,3 @@ Route::get('/result', function (Request $request) {
     $product_name = $request->query('product_name');
     return view('web.result', compact('product_id', 'product_name'));
 });
-
-
-// Route
