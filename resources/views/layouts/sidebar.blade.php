@@ -28,27 +28,24 @@
                 </div>
             </div>
             <ul class="nav nav-primary">
-                <li class="nav-item {{ request()->is('home*') ? 'active' : '' }}">
-                    <a href="{{ url('/home') }}">
-                        <i class="fas fa-tachometer-alt"></i> <!-- Ikon Dashboard -->
+                <li class="nav-item {{ request()->is('/*') ? 'active' : '' }}">
+                    <a href="{{ url('/') }}">
+                        <i class="fas fa-plus"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-
+                <li class="nav-item {{ request()->is('cashier*') ? 'active' : '' }}">
+                    <a href="{{ url('/cashier') }}">
+                        <i class="fas fa-plus"></i>
+                        <p>Kasir</p>
+                    </a>
+                </li>
                 <li class="nav-item {{ request()->is('product*') ? 'active' : '' }}">
                     <a href="{{ url('/product') }}">
-                        <i class="fas fa-box"></i> <!-- Ikon Produk -->
-                        <p>Produk</p>
+                        <i class="fas fa-plus"></i>
+                        <p>Product</p>
                     </a>
                 </li>
-
-                <li class="nav-item {{ request()->is('billing*') ? 'active' : '' }}">
-                    <a href="{{ url('/billing') }}">
-                        <i class="fas fa-shopping-cart"></i> <!-- Ikon Pesanan -->
-                        <p>Pesanan</p>
-                    </a>
-                </li>
-
             </ul>
         </div>
     </div>
