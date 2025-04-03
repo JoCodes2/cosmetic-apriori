@@ -19,19 +19,23 @@ class AuthRepositories implements AuthInterfaces
     }
     public function login(AuthRequest $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()
-                ->json(['message' => 'Unauthorized'], 401);
+        try {
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Unauthorized'
+                ], 401);
+            } else {
+                $user = $this->usermodel::where('email', $request->email)->first();
+                $user->createToken('token')->plainTextToken;
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Login success',
+                ]);
+            }
+        } catch (\Throwable $th) {
+            return $this->error($th->getMessage());
         }
-
-        $user = $this->usermodel::where('email', $request['email'])->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return $this->success([
-            'user' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
     }
 
 
