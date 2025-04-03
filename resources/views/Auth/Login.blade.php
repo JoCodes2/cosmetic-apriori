@@ -81,7 +81,7 @@
                             </div>
                         </form>
                         <div class="social-icons text-center mt-4">
-                            <a href="#"><img src="{{ asset('image/maxie.png') }}" alt="Logo"
+                            <a href="#"><img src="{{ asset('Image/maxie.png') }}" alt="Logo"
                                     class="img-fluid img-logo rounded"></a>
                             <a href="#"><img src="{{ asset('assets/assets/img/20241107_171817.jpg') }}"
                                     alt="Logo" class="img-fluid img-logo rounded"></a>
