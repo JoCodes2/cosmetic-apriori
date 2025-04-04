@@ -54,6 +54,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/top-product', 'getTopProducts');
         Route::put('/{id}/status', 'updateStatus');
         Route::get('/today', 'getTodayOrders');
+        Route::delete('/delete/{id}', 'deleteDataById');
     });
 });
 // ui web

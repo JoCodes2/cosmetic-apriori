@@ -44,7 +44,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="invoiceModalLabel">Bukti Pembayaran</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <div id="fakturInvoice">
@@ -86,7 +88,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Tutup</button>
                     </div>
                 </div>
             </div>
@@ -124,23 +126,30 @@
                             $.each(order.billing_items, function(i, item) {
                                 tableBody += "<li>" + item.name_product + " - Rp " +
                                     new Intl.NumberFormat("id-ID").format(item
-                                        .total_price) + " (Qty: " + item.qty + ")</li>";
+                                        .total_price) +
+                                    " (Qty: " + item.qty + ")</li>";
                             });
                             tableBody += "</ul></td>";
-                            tableBody += `
-                                <td>
-                                    <button class="btn btn-sm btn-primary view-invoice" data-order-id="${order.id}">
-                                        <i class='fas fa-eye'></i> Lihat
-                                    </button>
 
-                                    <button class="btn btn-sm btn-success mark-paid" data-order-id="${order.id}">
-            <i class='fas fa-check'></i> Lunas
-        </button>
-                                </td>`;
-                            tableBody += "</tr>";
+                            tableBody += `<td>
+                        <button class="btn btn-sm btn-primary view-invoice" data-order-id="${order.id}">
+                            <i class='fas fa-eye'></i> Lihat
+                        </button>`;
+
+                            if (order.status_transaction !== "paid") {
+                                tableBody += `
+                        <button class="btn btn-sm btn-success mark-paid" data-order-id="${order.id}">
+                            <i class='fas fa-check'></i> Lunas
+                        </button>
+                        <button class="btn btn-sm btn-danger delete-order" data-order-id="${order.id}">
+                            <i class='fas fa-trash'></i> Hapus
+                        </button>`;
+                            }
+                            tableBody += `</td></tr>`;
                         });
 
                         $("#orderTable").html(tableBody);
+                        $(".table").DataTable();
                     },
                     error: function() {
                         console.log("Gagal mengambil data dari server");
@@ -184,6 +193,108 @@
                 });
             });
 
+            // Delete data button click handler
+            $(document).on('click', '.delete-order', function() {
+                let id = $(this).data('order-id');
+                console.log(id);
+
+
+                // Function to delete data
+                function deleteDataById() {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: `/v1/order/delete/${id}`,
+                        dataType: 'json',
+                        success: function(response) {
+                            console.log(response);
+                            if (response.code === 200 || response.status === "success") {
+                                successAlert('Data berhasil dihapus!');
+
+                                // Tunggu sebentar sebelum reload
+                                setTimeout(function() {
+                                    location
+                                        .reload(); // Reload browser setelah data terhapus
+                                }, 1500);
+                            } else {
+                                errorAlert();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', xhr.responseText);
+                            errorAlert();
+                        }
+                    });
+                }
+
+                // Show confirmation alert
+                confirmAlert('Apakah Anda yakin ingin menghapus data?', deleteDataById);
+            });
+
+            // messeage alert
+            // alert success message
+            function successAlert(message) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: message,
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1000,
+                })
+            }
+
+            // alert error message
+            function errorAlert() {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Terjadi kesalahan!',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    timer: 1000,
+                });
+            }
+
+            function reloadBrowsers() {
+                setTimeout(function() {
+                    location.reload();
+                }, 1500);
+            }
+
+
+            function confirmAlert(message, callback) {
+                Swal.fire({
+                    title: '<span style="font-size: 22px"> Konfirmasi!</span>',
+                    html: message,
+                    showCancelButton: true,
+                    showConfirmButton: true,
+                    cancelButtonText: 'Tidak',
+                    confirmButtonText: 'Ya',
+                    reverseButtons: true,
+                    confirmButtonColor: '#48ABF7',
+                    cancelButtonColor: '#EFEFEF',
+                    customClass: {
+                        cancelButton: 'text-dark'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        callback();
+                    }
+                });
+            }
+
+            // loading alert
+            function loadingAllert() {
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+
+
+
 
 
             //invoice
@@ -192,7 +303,7 @@
                 let orderId = $(this).data("order-id");
 
                 $.ajax({
-                    url: `/v1/order/get/${orderId}`,
+                    url: ` /v1/order/get/${orderId}`,
                     method: "GET",
                     dataType: "json",
                     success: function(response) {
@@ -211,6 +322,7 @@
             });
 
             function showInvoiceModal(data) {
+                // Menampilkan data pelanggan
                 $("#customerName").text(data.customer.name);
                 $("#customerPhone").text(data.customer.phone);
                 $("#customerAddress").text(data.customer.address);
@@ -218,6 +330,7 @@
                 $("#transactionCode").text(data.code_transaction);
                 $("#transactionStatus").text(data.status_transaction);
 
+                // Menampilkan daftar produk dalam transaksi
                 let itemsHtml = data.billing_items.map(item => `
                     <tr>
                         <td>${item.name_product}</td>
@@ -228,11 +341,15 @@
                 `).join('');
 
                 $("#invoiceItems").html(itemsHtml);
+
+                // Menampilkan total pembayaran
                 $("#totalPayment").text(`Rp ${new Intl.NumberFormat("id-ID").format(data.total_payment)}`);
 
+                // Menampilkan modal invoice
                 let invoiceModal = new bootstrap.Modal(document.getElementById('invoiceModal'));
                 invoiceModal.show();
             }
+
 
         });
     </script>

@@ -47,7 +47,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title" id="upsertDataModalLabel">
-                            <i class="fas fa-tasks pr-2"></i> Form Data
+                            <i class="fas fa-tasks pr-2"></i> Produk
                         </h3>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -67,24 +67,24 @@
                                     <!-- Name Input -->
                                     <div class="form-group">
                                         <label for="name">Nama Produk</label>
-                                        <input type="text" class="form-control form-control-lg" name="name"
-                                            id="name" placeholder="Masukkan Nama Produk">
+                                        <input type="text" class="form-control " name="name" id="name"
+                                            placeholder="Masukkan Nama Produk">
                                         <small id="name-error" class="text-danger"></small>
                                     </div>
 
                                     <!-- Price Input -->
                                     <div class="form-group">
-                                        <label for="price">Harga Barang</label>
+                                        <label for="price">Harga Produk</label>
                                         <div class="input-group">
                                             <span class="input-group-text">Rp</span>
-                                            <input type="text" class="form-control form-control-lg" name="price"
-                                                id="price" placeholder="Masukkan Harga Barang">
+                                            <input type="text" class="form-control " name="price" id="price"
+                                                placeholder="Masukkan Harga Produk">
                                         </div>
                                         <small id="price-error" class="text-danger"></small>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="image">Image</label>
+                                        <label for="image">Gambar Produk</label>
                                         <input type="file" class="form-control-file" name="image" id="image">
                                         <small id="image-error" class="text-danger"></small>
                                     </div>

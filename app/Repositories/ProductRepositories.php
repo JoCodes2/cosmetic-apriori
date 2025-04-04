@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Http\Requests\ProductRequest;
 use App\Interfaces\ProductInterfaces;
+use App\Models\BillingItemsModel;
 use App\Models\ProductModel;
 use App\Traits\HttpResponseTraits;
 use Illuminate\Http\Request;
@@ -140,6 +141,13 @@ class ProductRepositories implements ProductInterfaces
         try {
             // Temukan data produk berdasarkan ID
             $data = $this->ProductModel::findOrFail($id);
+
+            // Cek apakah produk sedang digunakan di tabel lain (contoh: tabel 'order_items')
+            $isUsed = BillingItemsModel::where('id_product', $id)->exists(); // Sesuaikan dengan tabel terkait
+
+            if ($isUsed) {
+                return $this->error('Produk ini tidak bisa dihapus karena sedang digunakan dalam pesanan.', 400);
+            }
 
             // Periksa apakah file ada dan hapus dari storage
             if (!empty($data->image)) {

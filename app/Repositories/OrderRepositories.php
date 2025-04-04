@@ -210,4 +210,41 @@ class OrderRepositories implements OrderInterfaces
             return $this->success($data);
         }
     }
+
+    public function deleteDataById($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Cari data billing berdasarkan ID
+            $billing = $this->billings->find($id);
+
+            if (!$billing) {
+                return $this->dataNotFound();
+            }
+
+            // Ambil ID customer sebelum menghapus billing
+            $customerId = $billing->id_customer;
+
+            // Hapus billing items terkait
+            $this->billingsItems->where('id_billing', $id)->delete();
+
+            // Hapus billing utama
+            $billing->delete();
+
+            // Cek apakah customer masih memiliki billing lain
+            $remainingBillings = $this->billings->where('id_customer', $customerId)->count();
+
+            // Jika tidak ada billing lain, hapus customer
+            if ($remainingBillings === 0) {
+                $this->customers->where('id', $customerId)->delete();
+            }
+
+            DB::commit();
+            return $this->success(['message' => 'Data order berhasil dihapus']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->error($th->getMessage(), 400, $th, class_basename($this), __FUNCTION__);
+        }
+    }
 }

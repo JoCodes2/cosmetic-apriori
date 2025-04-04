@@ -49,4 +49,9 @@ class OrderController extends Controller
     {
         return $this->orderRepo->getTodayOrders();
     }
+
+    public function deleteDataById($id)
+    {
+        return $this->orderRepo->deleteDataById($id);
+    }
 }

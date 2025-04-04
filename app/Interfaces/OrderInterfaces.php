@@ -14,4 +14,6 @@ interface OrderInterfaces
     public function getRecommendedProducts(Request $request);
     public function updateStatus($id, $status);
     public function getTodayOrders();
+    public function deleteDataById($id); // Tambahan fungsi untuk menghapus data order
+
 }
