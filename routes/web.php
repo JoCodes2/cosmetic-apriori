@@ -33,32 +33,29 @@ Route::middleware(['auth', 'web'])->group(function () {
 
     Route::get('v1/order/{id}/invoice', [OrderController::class, 'showInvoice']);
 
-
-    Route::prefix('v1')->group(function () {
-
-        // route  api  //
-        Route::prefix('product')->controller(ProductController::class)->group(function () {
-            Route::get('/', 'getAllData');
-            Route::post('/create', 'createData');
-            Route::get('/search', 'search');
-            Route::get('/get/{id}', 'getDataById');
-            Route::post('/update/{id}', 'updateDataById');
-            Route::delete('/delete/{id}', 'deleteDataById');
-        });
-        Route::prefix('order')->controller(OrderController::class)->group(function () {
-            Route::get('/', 'getAllData');
-            Route::post('/recommendations', 'getRecommendedProducts');
-            Route::post('/create', 'createData');
-            Route::get('/get/{id}', 'getDataById');
-            Route::get('/top-product', 'getTopProducts');
-            Route::put('/{id}/status', 'updateStatus');
-            Route::get('/today', 'getTodayOrders');
-        });
-    });
-
     Route::post('v1/logout', [AuthController::class, 'logout']);
 });
+Route::prefix('v1')->group(function () {
 
+    // route  api  //
+    Route::prefix('product')->controller(ProductController::class)->group(function () {
+        Route::get('/', 'getAllData');
+        Route::post('/create', 'createData');
+        Route::get('/search', 'search');
+        Route::get('/get/{id}', 'getDataById');
+        Route::post('/update/{id}', 'updateDataById');
+        Route::delete('/delete/{id}', 'deleteDataById');
+    });
+    Route::prefix('order')->controller(OrderController::class)->group(function () {
+        Route::get('/', 'getAllData');
+        Route::post('/recommendations', 'getRecommendedProducts');
+        Route::post('/create', 'createData');
+        Route::get('/get/{id}', 'getDataById');
+        Route::get('/top-product', 'getTopProducts');
+        Route::put('/{id}/status', 'updateStatus');
+        Route::get('/today', 'getTodayOrders');
+    });
+});
 // ui web
 Route::get('/',  function () {
     return view('web.home');
